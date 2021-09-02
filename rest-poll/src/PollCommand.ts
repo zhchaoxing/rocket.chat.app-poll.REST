@@ -16,12 +16,30 @@ export class PollCommand implements ISlashCommand {
             threadId: context.getThreadId(),
         };
 
-        const question = context.getArguments().join(' ');
-
+        //const question = context.getArguments().join(' ');
+        const params_REST = context.getArguments().join(' ').split("|");
+        
         if (triggerId) {
-            const modal = await createPollModal({ question, persistence: persis, modify, data });
-
-            await modify.getUiController().openModalView(modal, { triggerId }, context.getSender());
+            if (params_REST.length === 1)
+            {
+                const modal = await createPollModal({ question, persistence: persis, data, modify});
+                await modify.getUiController().openModalView(modal, { triggerId }, context.getSender());
+            } else
+            {
+                const question = params_REST[0]; //Qeustion
+                const options = params_REST[3]; //# of options
+                const rest = true; //By REST api?
+                const singleChoice = (params_REST[1] === "S"); // Is it a single choice [S] vote, not a multiple choice [M] one?
+                const confidential = (params_REST[2] === "C"); // Is it a confidential [C] vote, not a open vote [O] one?
+                var set = [];
+                for(i = 4; i < params_REST.length; i++)
+                {
+                    set.push(params_REST[i]);
+                }
+                const option_set = set;
+                const modal = await createPollModal({ question, persistence: persis, data, modify, options, rest, singleChoice, confidential, option_set});
+                await modify.getUiController().openModalView(modal, { triggerId }, context.getSender());
+            }
         }
     }
 }

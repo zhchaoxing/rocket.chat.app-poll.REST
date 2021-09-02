@@ -5,13 +5,17 @@ import { IUIKitModalViewParam } from '@rocket.chat/apps-engine/definition/uikit/
 import { IModalContext } from '../definition';
 import { uuid } from './uuid';
 
-export async function createPollModal({ id = '', question, persistence, data, modify, options = 2 }: {
+export async function createPollModal({ id = '', question, persistence, data, modify, options = 2, rest = false, singleChoice = false, confidential = false, option_set = []}: {
     id?: string,
     question?: string,
     persistence: IPersistence,
     data: IModalContext,
     modify: IModify,
     options?: number,
+    rest?: boolean,
+    singleChoice?: boolean,
+    confidential?: boolean,
+    option_set?: Array<string>
 }): Promise<IUIKitModalViewParam> {
     const viewId = id || uuid();
 
